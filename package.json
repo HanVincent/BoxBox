@@ -1,0 +1,25 @@
+{
+  "name": "boxbox",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "mocha server/**/*.test.js",
+    "test-watch": "nodemon --exec 'npm test'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HanVincent/BoxBox.git"
+  },
+  "author": "Vincent Han",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HanVincent/BoxBox/issues"
+  },
+  "homepage": "https://github.com/HanVincent/BoxBox#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "socket.io": "^2.0.4"
+  }
+}
