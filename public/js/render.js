@@ -1,40 +1,40 @@
-const stage = new PIXI.Container();
-const renderer = PIXI.autoDetectRenderer(256, 256);
-document.body.appendChild(renderer.view);
+// TODO: game config ?
 
+const stage = new PIXI.Container();
+const renderer = PIXI.autoDetectRenderer(1024, 1024);
 const loader = PIXI.loader;
+
+document.body.appendChild(renderer.view);
 
 loader
     .add("ground", "images/ground.json")
     .add("character", "images/character.json")
     .load(setup);
 
-let character, box;
+let myBox, boxes, lawn, sea;
+function setup() { // render map?
+    const character = loader.resources.character.textures;
+    myBox = new PIXI.Sprite(character["box"]);
 
-function setup() {
-    character = loader.resources.character.textures;
-    box = new PIXI.Sprite(character["box"]);
+    stage.addChild(myBox);
 
-    // position
-    box.x = 32;
-    box.y = 32;
-    stage.addChild(box);
 
-    //render the stage
-    renderer.render(stage);
     gameLoop(); //Start the game loop
 }
 
+function renderMap(){
+
+}
+
 function gameLoop() {
-    //Loop this function at 60 frames per second
+    // Loop this function at 60 frames per second
     requestAnimationFrame(gameLoop);
 
-    //Move the cat 1 pixel to the right each frame
-    box.x = me.x;
-    box.y = me.y;
+    // position
+    myBox.x = me.x;
+    myBox.y = me.y;
 
-    //Render the stage to see the animation
     renderer.render(stage);
 }
 
-  
+

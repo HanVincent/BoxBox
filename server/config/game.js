@@ -1,9 +1,9 @@
-const map = {
+const MAP = {
     maxWidth: 1024,
     maxHeight: 1024,
 };
 
-const box = {
+const BOX = {
     screenWidth: 600,
     screenHeight: 400,
 
@@ -17,7 +17,7 @@ const box = {
     vrot: 10,
 }
 
-const attack = {
+const ATTACK = {
     knife: -50,
     bullet: -40,
 
@@ -27,4 +27,4 @@ const attack = {
 }
 
 
-module.exports = { map, box , attack}
+module.exports = { MAP, BOX, ATTACK }

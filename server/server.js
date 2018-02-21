@@ -21,30 +21,31 @@ io.on('connection', (socket) => {
     console.log("New user connected");
 
     boxes.addBox(socket.id); //name
+    io.emit('update', boxes.getBoxes());
 
+    console.log(boxes.getBoxes());
     socket.on('keypress', (pressed, callback) => {
         console.log(pressed);
 
         pressed.forEach((each) => {
             switch (each) {
                 case 'w':
-                    boxes.getBox(socket.id).move(-1);
+                    boxes.move(socket.id, -1);
                     break;
                 case 's':
-                    boxes.getBox(socket.id).move(1);
+                    boxes.move(socket.id, 1);
                     break;
                 case 'd':
-                    boxes.getBox(socket.id).rotate(1);
+                    boxes.rotate(socket.id, 1);
                     break;
                 case 'a':
-                    boxes.getBox(socket.id).rotate(-1);
+                    boxes.rotate(socket.id, -1);
                     break;
 
             }
         })
 
-        socket.emit('updateMe', boxes.getBox(socket.id));
-        socket.broadcast.emit('update', boxes.getBoxes());
+        io.emit('update', boxes.getBoxes());
         // callback(boxes);
     });
 });

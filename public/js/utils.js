@@ -10,6 +10,6 @@ function updateKeys(e) {
 
     if (isKeyValid(key)) {
         e.type === 'keydown' ? pressed.add(key) : pressed.delete(e.key);
-        socket.emit('keypress', [...pressed], ()=>{});
+        socket.emit('keypress', [...pressed], () => { });
     }
 }
