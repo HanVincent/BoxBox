@@ -17,6 +17,13 @@ app.use(express.static(publicPath));
 // temp all boxes
 const boxes = new Boxes();
 
+// Create computer boxes
+const NUM = 10;
+let comID
+for(comID = 0; comID < NUM; comID++){
+    boxes.addBox(comID);
+}
+
 io.on('connection', (socket) => {
     console.log("New user connected");
 
@@ -41,7 +48,6 @@ io.on('connection', (socket) => {
                 case 'a':
                     boxes.rotate(socket.id, -1);
                     break;
-
             }
         })
 

@@ -1,6 +1,11 @@
 const MAP = {
-    maxWidth: 1024,
-    maxHeight: 1024,
+    maxWidth: 256,
+    maxHeight: 256,
+};
+
+// not used yet
+const ENTITY = {
+    size: 16
 };
 
 const BOX = {
@@ -27,4 +32,4 @@ const ATTACK = {
 }
 
 
-module.exports = { MAP, BOX, ATTACK }
+module.exports = { MAP, ENTITY, BOX, ATTACK }
