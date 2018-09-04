@@ -3,8 +3,9 @@ const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
 
-// some utils js
-const { Boxes } = require('./utils/boxes');
+// some objects from utils
+const { Boxes } = require('./utils/Boxes');
+const { Attacks } = require('./utils/Attacks');
 
 const publicPath = path.join(__dirname, '../public'); // get static file loc
 const port = process.env.PORT || 3000;
@@ -16,23 +17,23 @@ app.use(express.static(publicPath));
 
 // temp all boxes
 const boxes = new Boxes();
+const attacks = new Attacks();
 
 // Create computer boxes
 const NUM = 10;
-let comID
-for(comID = 0; comID < NUM; comID++){
-    boxes.addBox(comID);
-}
+// for(let comID = 0; comID < NUM; comID++){
+//     boxes.addBox(comID);
+// }
 
 io.on('connection', (socket) => {
-    console.log("New user connected");
+    console.log("New user connected: " + socket.id);
 
     boxes.addBox(socket.id); //name
-    io.emit('update', boxes.getBoxes());
+    io.emit('boxes', boxes.getBoxes());
 
-    console.log(boxes.getBoxes());
+    // console.log(boxes.getBoxes());
     socket.on('keypress', (pressed, callback) => {
-        console.log(pressed);
+        // console.log(pressed);
 
         pressed.forEach((each) => {
             switch (each) {
@@ -43,16 +44,29 @@ io.on('connection', (socket) => {
                     boxes.move(socket.id, 1);
                     break;
                 case 'd':
-                    boxes.rotate(socket.id, 1);
+                    boxes.rotate(socket.id, -1);
                     break;
                 case 'a':
-                    boxes.rotate(socket.id, -1);
+                    boxes.rotate(socket.id, 1);
+                    break;
+                case ' ':
+                    attacks.addAttack(boxes.getBox(socket.id));
+                    attacks.checkAttacks(boxes.getBoxes());
                     break;
             }
         })
 
-        io.emit('update', boxes.getBoxes());
+        io.emit('boxes', boxes.getBoxes());
+        io.emit('attacks', attacks.getAttacks());
+        attacks.updateAttacks();
         // callback(boxes);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected: ' + socket.id);
+        boxes.removeBox(socket.id);
+        io.emit('remove', socket.id); // TODO: workaround for disconnecting user
+        io.emit('boxes', boxes.getBoxes());
     });
 });
 

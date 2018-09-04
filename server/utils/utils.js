@@ -7,7 +7,7 @@ function genLoc() {
   return [x, y];
 }
 
-function isCollided(x, y, boxes) {
+function isAnyCollided(x, y, boxes) {
   if (boxes.length === 0) return false;
 
   const checkAll = boxes.map(el => checkCollision(x, y, el.x, el.y));
@@ -22,4 +22,8 @@ function checkCollision(x1, y1, x2, y2) {
   return false;
 }
 
-module.exports = { genLoc, isCollided };
+function isBoxDead(box) {
+  box.isDead = box.blood <= 0;
+}
+
+module.exports = { genLoc, isAnyCollided, checkCollision,isBoxDead };

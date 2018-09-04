@@ -23,8 +23,11 @@ const BOX = {
 }
 
 const ATTACK = {
-    knife: -50,
-    bullet: -40,
+    KNIFE: 0,
+    BULLET: 1,
+
+    atkKnife: 50,
+    atkBullet: 40,
 
     bufKnife: 1,
     bufBullet: 1,

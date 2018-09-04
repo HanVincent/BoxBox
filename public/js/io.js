@@ -14,9 +14,18 @@ socket.on('connect', () => {
     document.addEventListener('keyup', updateKeys);
 });
 
-socket.on('update', (data) => {
+socket.on('boxes', (data) => {
     console.log(data);
     me = data.filter(el => el.id === socket.id)[0];
     players = data.filter(el => el.id !== socket.id);
 })
 
+socket.on('remove', (id) => {
+    removeSprite(id);
+})
+
+socket.on('attacks', (attacks) => {
+    for(let atk of attacks) {
+        knifeAttack(atk.x, atk.y);
+    }
+})
