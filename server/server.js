@@ -51,7 +51,7 @@ io.on('connection', (socket) => {
                     break;
                 case ' ':
                     attacks.addAttack(boxes.getBox(socket.id));
-                    attacks.checkAttacks(boxes.getBoxes());
+                    attacks.checkAttacks(boxes.getOtherBoxes(socket.id));
                     break;
             }
         })

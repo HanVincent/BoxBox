@@ -20,12 +20,12 @@ socket.on('boxes', (data) => {
     players = data.filter(el => el.id !== socket.id);
 })
 
-socket.on('remove', (id) => {
-    removeSprite(id);
-})
-
 socket.on('attacks', (attacks) => {
-    for(let atk of attacks) {
+    for (let atk of attacks) {
         knifeAttack(atk.x, atk.y);
     }
+})
+
+socket.on('remove', (id) => {
+    removeSprite(id);
 })

@@ -20,6 +20,26 @@
                 "y": 0.5
             }
         },
+        "blood": {
+            "frame": {
+                "x": 48,
+                "y": 32,
+                "w": 16,
+                "h": 16
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 16,
+                "h": 16
+            },
+            "pivot": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
         "bomb_0": {
             "frame": {
                 "x": 48,

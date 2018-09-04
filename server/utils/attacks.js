@@ -45,15 +45,15 @@ class Attacks {
         // TODO: refactor
         for (let knife of this.knives) {
             for (let box of boxes) {
-                if (checkCollision(knife.x, knife.y, box.x, box.y)) {
+                if (checkCollision(knife.x, knife.y, box.x + BOX.size / 2, box.y + BOX.size / 2)) {
                     box.blood -= ATTACK.atkKnife;
-                    isBoxDead(box);
+                    box.isDead = isBoxDead(box);
                 }
             }
         }
     }
     getAttacks() {
-        return this.knives
+        return this.knives;
     }
 }
 

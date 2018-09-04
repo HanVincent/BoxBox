@@ -65,6 +65,10 @@ function gameLoop() {
     if (!boxes[player.id]) {
       boxes[player.id] = new PIXI.Sprite(character["box"]);
       stage.addChild(boxes[player.id]);
+    } else if (player.isDead) {
+      removeSprite(player.id);
+      boxes[player.id] = new PIXI.Sprite(character["blood"]);
+      stage.addChild(boxes[player.id]);
     }
     boxes[player.id].x = player.x;
     boxes[player.id].y = player.y;

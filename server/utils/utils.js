@@ -23,7 +23,7 @@ function checkCollision(x1, y1, x2, y2) {
 }
 
 function isBoxDead(box) {
-  box.isDead = box.blood <= 0;
+  return box.blood <= 0;
 }
 
 module.exports = { genLoc, isAnyCollided, checkCollision,isBoxDead };

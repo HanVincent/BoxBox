@@ -22,7 +22,7 @@ function setKnifeAnima() {
     knifing = new PIXI.extras.AnimatedSprite(frames);
     knifing.scale.set(0.5);
     knifing.anchor.set(0.5);
-    knifing.animationSpeed = 0.2;
+    knifing.animationSpeed = 0.3;
     knifing.loop = false;
     knifing.onComplete = () => {
         stage.removeChild(knifing);
