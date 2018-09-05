@@ -85,7 +85,7 @@ class Boxes {
     for (let box of this.boxes) {
       if (box.isDead && !box.isWaiting) {
         // reborn
-        self.removeBox(box.id);
+        this.removeBox(box.id);
         const pid = setTimeout(() => {
           self.addBox(box.id);
           callback(); // update game

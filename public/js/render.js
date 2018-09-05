@@ -1,11 +1,13 @@
 // TODO: game config ?
-const mapWidth = 256;
-const mapHeight = 256;
+const mapWidth = 1024;
+const mapHeight = 1024;
 
 const app = new PIXI.Application({ width: mapWidth, height: mapHeight });
 const stage = app.stage;
 const renderer = app.renderer;
 const loader = PIXI.loader;
+
+stage.scale.set(2);
 
 document.body.appendChild(renderer.view);
 

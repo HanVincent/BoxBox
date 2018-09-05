@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
                 case 'a':
                     boxes.rotate(socket.id, 1);
                     break;
-                case ' ':
+                case 'k':
                     attacks.addAttack(boxes.getBox(socket.id));
                     attacks.checkAttacks(boxes.getBoxes());
                     break;

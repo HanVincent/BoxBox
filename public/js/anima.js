@@ -20,7 +20,6 @@ function setKnifeAnima() {
         frames.push(PIXI.Texture.fromFrame('knife_' + i));
     }
     knifing = new PIXI.extras.AnimatedSprite(frames);
-    knifing.scale.set(0.5);
     knifing.anchor.set(0.5);
     knifing.animationSpeed = 0.3;
     knifing.loop = false;
