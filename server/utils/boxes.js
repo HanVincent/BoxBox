@@ -23,10 +23,8 @@ class Boxes {
       bulletNum: BOX.maxBullet,
       attackType: ATTACK.KNIFE,
 
-      // TODO: Refactor? 獨立成一個 class
-      kill: 0,
-      die: 0,
-      isDead: false
+      isDead: false,
+      isWaiting: false
     });
     // return box?
   }
@@ -58,9 +56,6 @@ class Boxes {
 
   move(id, direction) {
     const box = this.getBox(id);
-    if (box.isDead) return;
-
-
     const radian = box.angle * (Math.PI / 180);
 
     // update location
@@ -82,6 +77,22 @@ class Boxes {
     const box = this.getBox(id);
     box.angle += direction * BOX.vrot; // only step 1
     box.angle %= 360;
+  }
+
+  // check if any dead box and reborn
+  checkAnyDead(callback) {
+    const self = this;
+    for (let box of this.boxes) {
+      if (box.isDead && !box.isWaiting) {
+        // reborn
+        self.removeBox(box.id);
+        const pid = setTimeout(() => {
+          self.addBox(box.id);
+          callback(); // update game
+        }, 5000);
+        box.isWaiting = !!pid;
+      }
+    }
   }
 }
 

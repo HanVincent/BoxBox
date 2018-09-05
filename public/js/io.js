@@ -15,9 +15,7 @@ socket.on('connect', () => {
 });
 
 socket.on('boxes', (data) => {
-    console.log(data);
-    me = data.filter(el => el.id === socket.id)[0];
-    players = data.filter(el => el.id !== socket.id);
+    players = data;
 })
 
 socket.on('attacks', (attacks) => {

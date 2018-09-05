@@ -22,8 +22,5 @@ function checkCollision(x1, y1, x2, y2) {
   return false;
 }
 
-function isBoxDead(box) {
-  return box.blood <= 0;
-}
 
-module.exports = { genLoc, isAnyCollided, checkCollision,isBoxDead };
+module.exports = { genLoc, isAnyCollided, checkCollision };

@@ -16,25 +16,18 @@ loader
 
 renderer.backgroundColor = 0x008800;
 
-let myBox, lawn, sea,
-  boxes = {},
-  character; // Sprite entity
+let lawn, sea, character; // Sprite entity
+let boxes = {};
 
 function setup() {
   // render map?
   character = loader.resources.character.textures;
 
-  myBox = new PIXI.Sprite(character["box"]);
-  stage.addChild(myBox);
-
   setBombAnima();
   setKnifeAnima();
 
-  knifeAttack(150, 150);
-  
   gameLoop(); // Start the game loop
 }
-
 
 function bomb(x, y) {
   bombing.x = x;
@@ -52,24 +45,20 @@ function knifeAttack(x, y) {
 
 function renderMap() { }
 
+let tempDead = {};
 function gameLoop() {
   // Loop this function at 60 frames per second
   requestAnimationFrame(gameLoop);
 
-  // position
-  myBox.x = me.x;
-  myBox.y = me.y;
-
-  // update other boxes
   for (let player of players) {
     if (!boxes[player.id]) {
-      boxes[player.id] = new PIXI.Sprite(character["box"]);
-      stage.addChild(boxes[player.id]);
+      changeSprite(player, "box");
     } else if (player.isDead) {
-      removeSprite(player.id);
-      boxes[player.id] = new PIXI.Sprite(character["blood"]);
-      stage.addChild(boxes[player.id]);
+      changeSprite(player, "blood");
+    } else if (tempDead[player.id] !== player.isDead) {
+      changeSprite(player, "box");
     }
+    tempDead[player.id] = player.isDead;
     boxes[player.id].x = player.x;
     boxes[player.id].y = player.y;
   }
@@ -77,6 +66,11 @@ function gameLoop() {
   renderer.render(stage);
 }
 
+function changeSprite(player, name) {
+  removeSprite(player.id);
+  boxes[player.id] = new PIXI.Sprite(character[name]);
+  stage.addChild(boxes[player.id]);
+}
 
 function removeSprite(boxID) {
   stage.removeChild(boxes[boxID]);

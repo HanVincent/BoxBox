@@ -1,5 +1,5 @@
 const { ATTACK, BOX } = require("../config/game");
-const { checkCollision, isBoxDead } = require("./utils");
+const { checkCollision } = require("./utils");
 
 class Attacks {
     constructor() {
@@ -45,15 +45,19 @@ class Attacks {
         // TODO: refactor
         for (let knife of this.knives) {
             for (let box of boxes) {
-                if (checkCollision(knife.x, knife.y, box.x + BOX.size / 2, box.y + BOX.size / 2)) {
+                if (!box.isDead && box.id !== knife.attacker && checkCollision(knife.x, knife.y, box.x + BOX.size / 2, box.y + BOX.size / 2)) {
                     box.blood -= ATTACK.atkKnife;
-                    box.isDead = isBoxDead(box);
+                    box.isDead = this.isBoxDead(box);
                 }
             }
         }
     }
     getAttacks() {
         return this.knives;
+    }
+
+    isBoxDead(box) {
+        return box.blood <= 0;
     }
 }
 

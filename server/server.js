@@ -25,15 +25,22 @@ const NUM = 10;
 //     boxes.addBox(comID);
 // }
 
+function gameUpdate() {
+    io.emit('boxes', boxes.getBoxes());
+    io.emit('attacks', attacks.getAttacks());
+}
+
 io.on('connection', (socket) => {
     console.log("New user connected: " + socket.id);
 
     boxes.addBox(socket.id); //name
-    io.emit('boxes', boxes.getBoxes());
+    gameUpdate();
 
     // console.log(boxes.getBoxes());
     socket.on('keypress', (pressed, callback) => {
         // console.log(pressed);
+
+        if (!boxes.getBox(socket.id)) return;
 
         pressed.forEach((each) => {
             switch (each) {
@@ -51,15 +58,14 @@ io.on('connection', (socket) => {
                     break;
                 case ' ':
                     attacks.addAttack(boxes.getBox(socket.id));
-                    attacks.checkAttacks(boxes.getOtherBoxes(socket.id));
+                    attacks.checkAttacks(boxes.getBoxes());
                     break;
             }
         })
 
-        io.emit('boxes', boxes.getBoxes());
-        io.emit('attacks', attacks.getAttacks());
+        gameUpdate();
+        boxes.checkAnyDead(gameUpdate);
         attacks.updateAttacks();
-        // callback(boxes);
     });
 
     socket.on('disconnect', () => {
