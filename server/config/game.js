@@ -1,6 +1,7 @@
 const MAP = {
     maxWidth: 256,
     maxHeight: 256,
+    scale: 2,
 };
 
 // not used yet
@@ -25,9 +26,11 @@ const BOX = {
 const ATTACK = {
     KNIFE: 0,
     BULLET: 1,
+    BOMB: 2,
 
     atkKnife: 50,
     atkBullet: 40,
+    atkBomb: 60,
 
     bufKnife: 1,
     bufBullet: 1,

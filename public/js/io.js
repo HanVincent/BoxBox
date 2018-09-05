@@ -1,10 +1,9 @@
 'use strict';
 
-const socket = io();
+const name = prompt("Please enter your name", "HanVincent").trim().substring(0, 10) || "";
+const socket = io('', { query: `name=${name}` });
 
-let me = {};
-let players = []; // except me
-let board = [];
+let players = [], board = [];
 
 // connect
 socket.on('connect', () => {
@@ -19,9 +18,18 @@ socket.on('boxes', (data) => {
 })
 
 socket.on('attacks', (attacks) => {
-    for (let atk of attacks) {
-        knifeAttack(atk.x, atk.y);
+    const [knives, bombs] = attacks;
+    for (let knife of knives) {
+        knifeAttack(knife.x, knife.y);
     }
+    for (let bomb of bombs) {
+        bombAttack(bomb.x, bomb.y);
+    }
+})
+
+socket.on('board', (data) => {
+    console.log(data);
+    board = data;
 })
 
 socket.on('remove', (id) => {

@@ -6,27 +6,25 @@ class Boxes {
     this.boxes = [];
   }
 
-  addBox(id, name = "") {
+  addBox(id, name = "", isFake = false) {
     let [x, y] = genLoc();
     while (isAnyCollided(x, y, this.boxes)) {
       [x, y] = genLoc();
     }
 
-    this.boxes.push({
-      id,
-      name,
-      x,
-      y,
-      angle: 90,
+    const box = {
+      id, name, x, y, angle: 90,
 
       blood: BOX.maxBlood,
       bulletNum: BOX.maxBullet,
-      attackType: ATTACK.KNIFE,
+      attackType: isFake ? ATTACK.BOMB : ATTACK.KNIFE,
 
+      isFake,
       isDead: false,
       isWaiting: false
-    });
-    // return box?
+    }
+    this.boxes.push(box);
+    return box;
   }
   removeBox(id) {
     this.boxes = this.boxes.filter(box => box.id !== id);
@@ -42,16 +40,6 @@ class Boxes {
     // room
     return this.boxes;
     // const boxes = this.boxes.filter(box => box.room === room);
-  }
-
-  getBoard() {
-    return this.boxes.map(box => {
-      return {
-        name: box.name,
-        kill: box.kill,
-        die: box.die
-      };
-    });
   }
 
   move(id, direction) {
@@ -84,10 +72,11 @@ class Boxes {
     const self = this;
     for (let box of this.boxes) {
       if (box.isDead && !box.isWaiting) {
+
         // reborn
         this.removeBox(box.id);
         const pid = setTimeout(() => {
-          self.addBox(box.id);
+          self.addBox(box.id, box.name, box.isFake);
           callback(); // update game
         }, 5000);
         box.isWaiting = !!pid;

@@ -1,13 +1,26 @@
 const { ATTACK, BOX } = require("../config/game");
-const { checkCollision } = require("./utils");
+const { isCollided, isBombed } = require("./utils");
 
 class Attacks {
     constructor() {
         // this.attacks = [];
         this.knives = [];
+        this.bombs = [];
         // this.bullets = [];
+        this.board = {}; // don't know why use {}
     }
 
+    updateBoard(box) {
+        this.board[box.id] = {
+            id: box.id,
+            name: box.name,
+            kill: 0,
+            dead: 0,
+        }
+    }
+    removeBoard(id) {
+        delete this.board[id]
+    }
     addAttack(box) {
         const radian = box.angle * (Math.PI / 180);
 
@@ -16,10 +29,11 @@ class Attacks {
         const sin = Math.sin(radian);
         const cos = Math.cos(radian);
 
+        // attacks position is center
         switch (box.attackType) {
             case ATTACK.KNIFE:
                 this.knives.push({
-                    attacker: box.id,
+                    attacker: box,
                     x: centX + cos * BOX.size,
                     y: centY - sin * BOX.size,
                 });
@@ -29,35 +43,71 @@ class Attacks {
             //     if (box.bulletNum === 0) break;
 
             //     this.bullets.push({
-            //         attacker: box.id,
+            //         attacker: box,
             //     });
             //     break;
+
+            case ATTACK.BOMB:
+                // surrounding
+                this.bombs.push({ x: box.x + BOX.size / 2 - BOX.size, y: box.y + BOX.size / 2 - BOX.size });
+                this.bombs.push({ x: box.x + BOX.size / 2 - BOX.size, y: box.y + BOX.size / 2, });
+                this.bombs.push({ x: box.x + BOX.size / 2 - BOX.size, y: box.y + BOX.size / 2 + BOX.size });
+                this.bombs.push({ x: box.x + BOX.size / 2, y: box.y + BOX.size / 2 - BOX.size });
+                this.bombs.push({ x: box.x + BOX.size / 2, y: box.y + BOX.size / 2 + BOX.size });
+                this.bombs.push({ x: box.x + BOX.size / 2 + BOX.size, y: box.y + BOX.size / 2 - BOX.size });
+                this.bombs.push({ x: box.x + BOX.size / 2 + BOX.size, y: box.y + BOX.size / 2 });
+                this.bombs.push({ x: box.x + BOX.size / 2 + BOX.size, y: box.y + BOX.size / 2 + BOX.size });
+                break;
 
             default:
                 break;
         }
     }
-    removeAttack(box) { }
     updateAttacks() {
         this.knives = [];
+        this.bombs = [];
     }
     checkAttacks(boxes) {
         // TODO: refactor
         for (let knife of this.knives) {
             for (let box of boxes) {
-                if (!box.isDead && box.id !== knife.attacker && checkCollision(knife.x, knife.y, box.x + BOX.size / 2, box.y + BOX.size / 2)) {
-                    box.blood -= ATTACK.atkKnife;
-                    box.isDead = this.isBoxDead(box);
+                if (!box.isDead &&
+                    box.id !== knife.attacker.id &&
+                    isCollided(knife.x, knife.y, box.x + BOX.size / 2, box.y + BOX.size / 2)) {
+
+                    this.attacked(knife.attacker, box, ATTACK.atkKnife)
+
+                    if (box.isDead && box.isFake) { // bomb
+                        this.addAttack(box);
+                        this.checkAnyInBombRange(box, boxes);
+                    }
                 }
             }
         }
     }
-    getAttacks() {
-        return this.knives;
+    checkAnyInBombRange(bombingBox, boxes) {
+        for (let box of boxes) {
+            if (bombingBox.id !== box.id && isBombed(bombingBox.x, bombingBox.y, box.x, box.y)) {
+                // TODO: fake can attack fake?
+                this.attacked(bombingBox, box, ATTACK.atkBomb);
+            }
+        }
     }
-
-    isBoxDead(box) {
-        return box.blood <= 0;
+    // only here will decrease blood
+    attacked(attacker, attackee, hurt) {
+        attackee.blood -= hurt;
+        attackee.isDead = attackee.blood <= 0;
+        if (attackee.isDead && !attackee.isFake) {
+            if (!attacker.isFake)
+                this.board[attacker.id].kill += 1;
+            this.board[attackee.id].dead += 1;
+        }
+    }
+    getAttacks() {
+        return [this.knives, this.bombs];
+    }
+    getBoard() {
+        return Object.values(this.board);
     }
 }
 

@@ -1,13 +1,14 @@
 // TODO: game config ?
-const mapWidth = 1024;
-const mapHeight = 1024;
+const SCALE = 2;
+const mapWidth = 256 * SCALE;
+const mapHeight = 256 * SCALE;
 
 const app = new PIXI.Application({ width: mapWidth, height: mapHeight });
 const stage = app.stage;
 const renderer = app.renderer;
 const loader = PIXI.loader;
 
-stage.scale.set(2);
+stage.scale.set(SCALE);
 
 document.body.appendChild(renderer.view);
 
@@ -31,19 +32,6 @@ function setup() {
   gameLoop(); // Start the game loop
 }
 
-function bomb(x, y) {
-  bombing.x = x;
-  bombing.y = y;
-  bombing.gotoAndPlay(0);
-  stage.addChild(bombing);
-}
-
-function knifeAttack(x, y) {
-  knifing.x = x;
-  knifing.y = y;
-  knifing.gotoAndPlay(0);
-  stage.addChild(knifing);
-}
 
 function renderMap() { }
 
@@ -76,4 +64,36 @@ function changeSprite(player, name) {
 
 function removeSprite(boxID) {
   stage.removeChild(boxes[boxID]);
+}
+
+
+const fontStyle = { fontFamily: 'Courier New', fontSize: 12, fill: 0xDBD5D5, align: 'left' }
+let text = '';
+function showBoard() {
+  text = new PIXI.Text(formatBoard(), fontStyle);
+  stage.addChild(text);
+}
+
+function hideBoard() {
+  stage.removeChild(text);
+}
+
+let help = null;
+function showHelp() {
+  help = new PIXI.Text(`
+  w: forward
+  s: backward
+  a: rotate left
+  d: rotate right
+  
+  h: instruction
+  j: change attack type
+  k: attack
+  q: board
+  `, fontStyle);
+  stage.addChild(help);
+}
+
+function hideHelp() {
+  stage.removeChild(help);
 }

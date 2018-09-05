@@ -21,19 +21,22 @@ const attacks = new Attacks();
 
 // Create computer boxes
 const NUM = 10;
-// for(let comID = 0; comID < NUM; comID++){
-//     boxes.addBox(comID);
-// }
+for(let comID = 0; comID < NUM; comID++){
+    boxes.addBox(comID, "", true);
+}
 
 function gameUpdate() {
     io.emit('boxes', boxes.getBoxes());
     io.emit('attacks', attacks.getAttacks());
+    io.emit('board', attacks.getBoard());
 }
 
 io.on('connection', (socket) => {
     console.log("New user connected: " + socket.id);
-
-    boxes.addBox(socket.id); //name
+    
+    const name = socket.handshake.query.name
+    const box = boxes.addBox(socket.id, name);
+    attacks.updateBoard(box);
     gameUpdate();
 
     // console.log(boxes.getBoxes());
@@ -70,7 +73,9 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log('User disconnected: ' + socket.id);
+
         boxes.removeBox(socket.id);
+        attacks.removeBoard(socket.id);
         io.emit('remove', socket.id); // TODO: workaround for disconnecting user
         io.emit('boxes', boxes.getBoxes());
     });
