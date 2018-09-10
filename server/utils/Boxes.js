@@ -3,12 +3,12 @@ const { genLoc, isAnyCollided } = require("./utils");
 
 class Boxes {
   constructor(id) {
-    this.boxes = [];
+    this.boxes = {};
   }
 
   addBox(id, name = "", isFake = false) {
     let [x, y] = genLoc();
-    while (isAnyCollided(x, y, this.boxes)) {
+    while (isAnyCollided(x, y, this.getBoxes())) {
       [x, y] = genLoc();
     }
 
@@ -23,22 +23,21 @@ class Boxes {
       isDead: false,
       isWaiting: false
     }
-    this.boxes.push(box);
+    this.boxes[id] = box;
     return box;
   }
   removeBox(id) {
-    this.boxes = this.boxes.filter(box => box.id !== id);
-    // return box?
+    delete this.boxes[id];
   }
   getBox(id) {
-    return this.boxes.find(box => box.id === id);
+    return this.boxes[id];
   }
   getOtherBoxes(id) {
-    return this.boxes.filter(box => box.id !== id);
+    return Object.values(this.boxes).filter(box => box.id !== id);
   }
   getBoxes() {
     // room
-    return this.boxes;
+    return Object.values(this.boxes);
     // const boxes = this.boxes.filter(box => box.room === room);
   }
 
@@ -70,7 +69,7 @@ class Boxes {
   // check if any dead box and reborn
   checkAnyDead(callback) {
     const self = this;
-    for (let box of this.boxes) {
+    for (let box of this.getBoxes()) {
       if (box.isDead && !box.isWaiting) {
 
         // reborn
