@@ -20,7 +20,7 @@ const BOX = {
 
     vx: 10,
     vy: 10,
-    vrot: 10,
+    vrot: 0.1,
 }
 
 const ATTACK = {

@@ -15,7 +15,7 @@ function setupSocket(name) {
   });
 
   socket.on("board", data => {
-    board = data;
+    BOARD_TEXT.text = formatBoard(data);
   });
   
   socket.on("attacks", attacks => {

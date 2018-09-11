@@ -1,9 +1,5 @@
 // TODO: game config ?
-const SCALE = 2;
-const mapWidth = 256 * SCALE;
-const mapHeight = 256 * SCALE;
-
-const app = new PIXI.Application({ width: mapWidth, height: mapHeight });
+const app = new PIXI.Application({ width: MAP_WIDTH, height: MAP_HEIGHT });
 const stage = app.stage;
 const renderer = app.renderer;
 const loader = PIXI.loader;
@@ -12,19 +8,17 @@ stage.scale.set(SCALE);
 renderer.backgroundColor = 0x008800;
 
 let lawn, sea, character; // Sprite entity
-let boxes = {};
+let boxes = {}, bloods = {};
 
 function startRender() {
+  document.body.appendChild(renderer.view);
   loader
     .add("ground", "images/ground.json")
     .add("character", "images/character.json")
     .load(setup);
-
-  document.body.appendChild(renderer.view);
 }
 
 function setup() {
-  // render map?
   character = loader.resources.character.textures;
 
   setBombAnima();
@@ -58,6 +52,9 @@ function gameLoop() {
 }
 
 function updateSprite(player, name) {
+  if(boxes[player.id]) { // if has sprite
+
+  }
   removeSprite(player.id);
   boxes[player.id] = new PIXI.Sprite(character[name]);
   boxes[player.id].anchor.set(0.5);
@@ -68,43 +65,33 @@ function removeSprite(boxID) {
   stage.removeChild(boxes[boxID]);
 }
 
-// Board Text
+// FONT
 const fontStyle = {
   fontFamily: "Courier New",
   fontSize: 12,
   fill: 0xdbd5d5,
   align: "left"
 };
-let text = "";
-function showBoard() {
-  text = new PIXI.Text(formatBoard(), fontStyle);
-  stage.addChild(text);
-}
 
-function hideBoard() {
-  stage.removeChild(text);
-}
+// BOARD
+const BOARD_TEXT = new PIXI.Text("", fontStyle);
+BOARD_TEXT.visible = false;
+stage.addChild(BOARD_TEXT);
 
-// Help Text
-let help = null;
-function showHelp() {
-  help = new PIXI.Text(
-    `
-  w: forward
-  s: backward
-  a: rotate left
-  d: rotate right
-  
-  h: instruction
-  j: change attack type
-  k: attack
-  q: board
-  `,
-    fontStyle
-  );
-  stage.addChild(help);
-}
+// HELP
+const HELP_TEXT = new PIXI.Text(
+  `
+w: forward
+s: backward
+a: rotate left
+d: rotate right
 
-function hideHelp() {
-  stage.removeChild(help);
-}
+h: instruction
+j: change attack type
+k: attack
+q: board
+`,
+  fontStyle
+);
+HELP_TEXT.visible = false;
+stage.addChild(HELP_TEXT);

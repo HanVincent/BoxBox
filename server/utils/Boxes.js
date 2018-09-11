@@ -61,9 +61,8 @@ class Boxes {
 
   rotate(id, direction) {
     const box = this.getBox(id);
-    box.radian += direction * 0.1;//BOX.vrot; // only step 1
+    box.radian += direction * BOX.vrot; // only step 1
 
-    // box.radian %= 360;
   }
 
   // check if any dead box and reborn

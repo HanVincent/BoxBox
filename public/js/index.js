@@ -1,6 +1,9 @@
 'use strict';
+const SCALE = 2;
+const MAP_WIDTH = 256 * SCALE;
+const MAP_HEIGHT = 256 * SCALE;
 
-let players = [], board = [];
+let players = [];
 
 // start
 function startGame() {
