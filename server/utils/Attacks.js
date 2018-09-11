@@ -49,7 +49,7 @@ class Attacks {
                 this.bombs.push({ x: box.x - BOX.size, y: box.y - BOX.size });
                 this.bombs.push({ x: box.x - BOX.size, y: box.y, });
                 this.bombs.push({ x: box.x - BOX.size, y: box.y + BOX.size });
-                this.bombs.push({ x: box.x, y: box.y + BOX.size });
+                this.bombs.push({ x: box.x, y: box.y - BOX.size });
                 this.bombs.push({ x: box.x, y: box.y + BOX.size });
                 this.bombs.push({ x: box.x + BOX.size, y: box.y - BOX.size });
                 this.bombs.push({ x: box.x + BOX.size, y: box.y });

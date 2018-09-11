@@ -7,7 +7,7 @@ function isKeyValid(key) {
 
 function updateKeys(e) {
     if (isKeyValid(e.key)) {
-        // shit code
+        // TODO: refactor shit code
         if (e.key === 'q') {
             if (!e.repeat)
                 e.type === 'keydown' ? showBoard() : hideBoard();

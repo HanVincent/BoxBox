@@ -9,18 +9,19 @@ const renderer = app.renderer;
 const loader = PIXI.loader;
 
 stage.scale.set(SCALE);
-
-document.body.appendChild(renderer.view);
-
-loader
-  .add("ground", "images/ground.json")
-  .add("character", "images/character.json")
-  .load(setup);
-
 renderer.backgroundColor = 0x008800;
 
 let lawn, sea, character; // Sprite entity
 let boxes = {};
+
+function startRender() {
+  loader
+    .add("ground", "images/ground.json")
+    .add("character", "images/character.json")
+    .load(setup);
+
+  document.body.appendChild(renderer.view);
+}
 
 function setup() {
   // render map?
@@ -32,8 +33,7 @@ function setup() {
   gameLoop(); // Start the game loop
 }
 
-
-function renderMap() { }
+function renderMap() {}
 
 let tempDead = {};
 function gameLoop() {
@@ -68,8 +68,13 @@ function removeSprite(boxID) {
 }
 
 // Board Text
-const fontStyle = { fontFamily: 'Courier New', fontSize: 12, fill: 0xDBD5D5, align: 'left' }
-let text = '';
+const fontStyle = {
+  fontFamily: "Courier New",
+  fontSize: 12,
+  fill: 0xdbd5d5,
+  align: "left"
+};
+let text = "";
 function showBoard() {
   text = new PIXI.Text(formatBoard(), fontStyle);
   stage.addChild(text);
@@ -82,7 +87,8 @@ function hideBoard() {
 // Help Text
 let help = null;
 function showHelp() {
-  help = new PIXI.Text(`
+  help = new PIXI.Text(
+    `
   w: forward
   s: backward
   a: rotate left
@@ -92,7 +98,9 @@ function showHelp() {
   j: change attack type
   k: attack
   q: board
-  `, fontStyle);
+  `,
+    fontStyle
+  );
   stage.addChild(help);
 }
 

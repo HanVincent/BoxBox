@@ -8,9 +8,41 @@
 </head>
 
 <body>
+    <div id="start-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h3>Instruction</h3>
+                <pre>
+(TODO: 改良UI)
+w: forward
+s: backward
+a: rotate left
+d: rotate right
+                
+h: instruction
+j: change attack type
+k: attack
+q: board
+r: rank
 
+起始血量: 100
+刀子損傷: 60
+攻擊到假箱子會發生爆炸，產生損傷: 60
+                </pre>
+            </div>
+            <div class="modal-footer">
+                Name:
+                <input type="text" id="name" name="name">
+                <button onclick="startGame()" class="start">Start</button>
+            </div>
+        </div>
+    </div>
+
+
+    <link rel="stylesheet" href="index.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.7.0/pixi.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/index.js"></script>
     <script src="/js/anima.js"></script>
     <script src="/js/render.js"></script>
     <script src="/js/utils.js"></script>
