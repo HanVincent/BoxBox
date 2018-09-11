@@ -51,6 +51,7 @@ function gameLoop() {
     tempDead[player.id] = player.isDead;
     boxes[player.id].x = player.x;
     boxes[player.id].y = player.y;
+    boxes[player.id].rotation = player.radian;
   }
 
   renderer.render(stage);

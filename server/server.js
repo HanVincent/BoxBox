@@ -54,10 +54,10 @@ io.on('connection', (socket) => {
                     boxes.move(socket.id, 1);
                     break;
                 case 'd':
-                    boxes.rotate(socket.id, -1);
+                    boxes.rotate(socket.id, 1);
                     break;
                 case 'a':
-                    boxes.rotate(socket.id, 1);
+                    boxes.rotate(socket.id, -1);
                     break;
                 case 'k':
                     attacks.addAttack(boxes.getBox(socket.id));

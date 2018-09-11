@@ -13,7 +13,7 @@ class Boxes {
     }
 
     const box = {
-      id, name, x, y, angle: 90,
+      id, name, x, y, radian: 0,
 
       blood: BOX.maxBlood,
       bulletNum: BOX.maxBullet,
@@ -43,11 +43,10 @@ class Boxes {
 
   move(id, direction) {
     const box = this.getBox(id);
-    const radian = box.angle * (Math.PI / 180);
 
     // update location
-    box.x -= direction * Math.cos(radian) * BOX.vx;
-    box.y += direction * Math.sin(radian) * BOX.vy;
+    box.x -= direction * Math.sin(box.radian) * BOX.vx;
+    box.y += direction * Math.cos(box.radian) * BOX.vy;
 
     // if collide wall
     box.x = Math.max(BOX.size / 2, Math.min(MAP.maxWidth - BOX.size / 2, box.x));
@@ -55,15 +54,16 @@ class Boxes {
 
     // if collide others, restore origin location
     if (isAnyCollided(box.x, box.y, this.getOtherBoxes(id))) {
-      box.x += direction * Math.cos(radian) * BOX.vx;
-      box.y -= direction * Math.sin(radian) * BOX.vy;
+      box.x += direction * Math.sin(box.radian) * BOX.vx;
+      box.y -= direction * Math.cos(box.radian) * BOX.vy;
     }
   }
 
   rotate(id, direction) {
     const box = this.getBox(id);
-    box.angle += direction * BOX.vrot; // only step 1
-    box.angle %= 360;
+    box.radian += direction * 0.1;//BOX.vrot; // only step 1
+
+    // box.radian %= 360;
   }
 
   // check if any dead box and reborn

@@ -22,17 +22,15 @@ class Attacks {
         delete this.board[id]
     }
     addAttack(box) {
-        const radian = box.angle * (Math.PI / 180);
-
-        const sin = Math.sin(radian);
-        const cos = Math.cos(radian);
+        const sin = Math.sin(box.radian);
+        const cos = Math.cos(box.radian);
 
         switch (box.attackType) {
             case ATTACK.KNIFE:
                 this.knives.push({
                     attacker: box,
-                    x: box.x + cos * BOX.size,
-                    y: box.y - sin * BOX.size,
+                    x: box.x + sin * BOX.size,
+                    y: box.y - cos * BOX.size,
                 });
                 break;
 
