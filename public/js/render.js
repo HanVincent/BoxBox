@@ -1,14 +1,7 @@
-// TODO: game config ?
-const app = new PIXI.Application({ width: MAP_WIDTH, height: MAP_HEIGHT });
-const stage = app.stage;
-const renderer = app.renderer;
-const loader = PIXI.loader;
-
-stage.scale.set(SCALE);
-renderer.backgroundColor = 0x008800;
-
 let lawn, sea, character; // Sprite entity
-let boxes = {}, bloods = {};
+let players = [];
+let boxes = {},
+  bloods = {};
 
 function startRender() {
   document.body.appendChild(renderer.view);
@@ -35,6 +28,7 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 
   for (let player of players) {
+    // TODO: refactor
     if (!boxes[player.id]) {
       updateSprite(player, "box");
     } else if (player.isDead) {
@@ -52,8 +46,8 @@ function gameLoop() {
 }
 
 function updateSprite(player, name) {
-  if(boxes[player.id]) { // if has sprite
-
+  if (boxes[player.id]) {
+    // if has sprite
   }
   removeSprite(player.id);
   boxes[player.id] = new PIXI.Sprite(character[name]);
@@ -65,33 +59,9 @@ function removeSprite(boxID) {
   stage.removeChild(boxes[boxID]);
 }
 
-// FONT
-const fontStyle = {
-  fontFamily: "Courier New",
-  fontSize: 12,
-  fill: 0xdbd5d5,
-  align: "left"
-};
-
-// BOARD
-const BOARD_TEXT = new PIXI.Text("", fontStyle);
-BOARD_TEXT.visible = false;
-stage.addChild(BOARD_TEXT);
-
-// HELP
-const HELP_TEXT = new PIXI.Text(
-  `
-w: forward
-s: backward
-a: rotate left
-d: rotate right
-
-h: instruction
-j: change attack type
-k: attack
-q: board
-`,
-  fontStyle
-);
-HELP_TEXT.visible = false;
-stage.addChild(HELP_TEXT);
+function show(obj) {
+  obj.visible = true;
+}
+function hide(obj) {
+  obj.visible = false;
+}
