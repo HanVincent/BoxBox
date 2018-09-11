@@ -1,5 +1,6 @@
 let bombing = [], knifing = [];
 
+// init
 function setBombAnima() {
     for (let i = 0; i < 4; i++) {
         bombing.push(PIXI.Texture.fromFrame('bomb_' + i));
@@ -12,6 +13,7 @@ function setKnifeAnima() {
     }
 }
 
+// utils
 function bombAttack(x, y) {
     const bomb = new PIXI.extras.AnimatedSprite(bombing);
     bomb.anchor.set(0.5);

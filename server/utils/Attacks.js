@@ -24,18 +24,15 @@ class Attacks {
     addAttack(box) {
         const radian = box.angle * (Math.PI / 180);
 
-        const centX = box.x + BOX.size * 0.5;
-        const centY = box.y + BOX.size * 0.5;
         const sin = Math.sin(radian);
         const cos = Math.cos(radian);
 
-        // attacks position is center
         switch (box.attackType) {
             case ATTACK.KNIFE:
                 this.knives.push({
                     attacker: box,
-                    x: centX + cos * BOX.size,
-                    y: centY - sin * BOX.size,
+                    x: box.x + cos * BOX.size,
+                    y: box.y - sin * BOX.size,
                 });
                 break;
 
@@ -49,14 +46,14 @@ class Attacks {
 
             case ATTACK.BOMB:
                 // surrounding
-                this.bombs.push({ x: box.x + BOX.size / 2 - BOX.size, y: box.y + BOX.size / 2 - BOX.size });
-                this.bombs.push({ x: box.x + BOX.size / 2 - BOX.size, y: box.y + BOX.size / 2, });
-                this.bombs.push({ x: box.x + BOX.size / 2 - BOX.size, y: box.y + BOX.size / 2 + BOX.size });
-                this.bombs.push({ x: box.x + BOX.size / 2, y: box.y + BOX.size / 2 - BOX.size });
-                this.bombs.push({ x: box.x + BOX.size / 2, y: box.y + BOX.size / 2 + BOX.size });
-                this.bombs.push({ x: box.x + BOX.size / 2 + BOX.size, y: box.y + BOX.size / 2 - BOX.size });
-                this.bombs.push({ x: box.x + BOX.size / 2 + BOX.size, y: box.y + BOX.size / 2 });
-                this.bombs.push({ x: box.x + BOX.size / 2 + BOX.size, y: box.y + BOX.size / 2 + BOX.size });
+                this.bombs.push({ x: box.x - BOX.size, y: box.y - BOX.size });
+                this.bombs.push({ x: box.x - BOX.size, y: box.y, });
+                this.bombs.push({ x: box.x - BOX.size, y: box.y + BOX.size });
+                this.bombs.push({ x: box.x, y: box.y + BOX.size });
+                this.bombs.push({ x: box.x, y: box.y + BOX.size });
+                this.bombs.push({ x: box.x + BOX.size, y: box.y - BOX.size });
+                this.bombs.push({ x: box.x + BOX.size, y: box.y });
+                this.bombs.push({ x: box.x + BOX.size, y: box.y + BOX.size });
                 break;
 
             default:
@@ -73,13 +70,15 @@ class Attacks {
             for (let box of boxes) {
                 if (!box.isDead &&
                     box.id !== knife.attacker.id &&
-                    isCollided(knife.x, knife.y, box.x + BOX.size / 2, box.y + BOX.size / 2)) {
+                    isCollided(knife.x, knife.y, box.x, box.y)) {
 
                     this.attacked(knife.attacker, box, ATTACK.atkKnife)
 
                     if (box.isDead && box.isFake) { // bomb
                         this.addAttack(box);
                         this.checkAnyInBombRange(box, boxes);
+                    } else {
+                        // 才回傳死掉的 emit
                     }
                 }
             }

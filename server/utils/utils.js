@@ -1,8 +1,8 @@
 const { MAP, BOX } = require("../config/game");
 
 function genLoc() {
-  let x = Math.floor(Math.random() * (MAP.maxWidth - BOX.size));
-  let y = Math.floor(Math.random() * (MAP.maxHeight - BOX.size));
+  let x = Math.floor(Math.random() * (MAP.maxWidth - BOX.size / 2)) + BOX.size / 2;
+  let y = Math.floor(Math.random() * (MAP.maxHeight - BOX.size / 2)) + BOX.size / 2;
 
   return [x, y];
 }
@@ -31,4 +31,4 @@ function isBombed(x1, y1, x2, y2) {
 }
 
 
-module.exports = { genLoc, isAnyCollided, isCollided,isBombed };
+module.exports = { genLoc, isAnyCollided, isCollided, isBombed };

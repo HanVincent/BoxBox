@@ -50,8 +50,8 @@ class Boxes {
     box.y += direction * Math.sin(radian) * BOX.vy;
 
     // if collide wall
-    box.x = Math.max(0, Math.min(MAP.maxWidth - BOX.size, box.x));
-    box.y = Math.max(0, Math.min(MAP.maxHeight - BOX.size, box.y));
+    box.x = Math.max(BOX.size / 2, Math.min(MAP.maxWidth - BOX.size / 2, box.x));
+    box.y = Math.max(BOX.size / 2, Math.min(MAP.maxHeight - BOX.size / 2, box.y));
 
     // if collide others, restore origin location
     if (isAnyCollided(box.x, box.y, this.getOtherBoxes(id))) {

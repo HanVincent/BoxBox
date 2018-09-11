@@ -42,11 +42,11 @@ function gameLoop() {
 
   for (let player of players) {
     if (!boxes[player.id]) {
-      changeSprite(player, "box");
+      updateSprite(player, "box");
     } else if (player.isDead) {
-      changeSprite(player, "blood");
+      updateSprite(player, "blood");
     } else if (tempDead[player.id] !== player.isDead) {
-      changeSprite(player, "box");
+      updateSprite(player, "box");
     }
     tempDead[player.id] = player.isDead;
     boxes[player.id].x = player.x;
@@ -56,9 +56,10 @@ function gameLoop() {
   renderer.render(stage);
 }
 
-function changeSprite(player, name) {
+function updateSprite(player, name) {
   removeSprite(player.id);
   boxes[player.id] = new PIXI.Sprite(character[name]);
+  boxes[player.id].anchor.set(0.5);
   stage.addChild(boxes[player.id]);
 }
 
@@ -66,7 +67,7 @@ function removeSprite(boxID) {
   stage.removeChild(boxes[boxID]);
 }
 
-
+// Board Text
 const fontStyle = { fontFamily: 'Courier New', fontSize: 12, fill: 0xDBD5D5, align: 'left' }
 let text = '';
 function showBoard() {
@@ -78,6 +79,7 @@ function hideBoard() {
   stage.removeChild(text);
 }
 
+// Help Text
 let help = null;
 function showHelp() {
   help = new PIXI.Text(`
