@@ -1,8 +1,8 @@
 const { MAP, BOX } = require("../config/game");
 
 function genLoc() {
-  let x = Math.floor(Math.random() * (MAP.maxWidth - BOX.size / 2)) + BOX.size / 2;
-  let y = Math.floor(Math.random() * (MAP.maxHeight - BOX.size / 2)) + BOX.size / 2;
+  let x = Math.floor(Math.random() * (MAP.maxWidth - BOX.size)) + BOX.size;
+  let y = Math.floor(Math.random() * (MAP.maxHeight - BOX.size)) + BOX.size;
 
   return [x, y];
 }

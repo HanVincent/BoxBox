@@ -1,4 +1,4 @@
-const VALID_KEYS = ["w", "s", "a", "d", "j", "k", "h", "q"]; // TODO: 要換成 keyCode
+const VALID_KEYS = [87, 83, 65, 68, 74, 75, 72, 81];
 const pressed = new Set();
 
 function isKeyValid(key) {
@@ -6,19 +6,25 @@ function isKeyValid(key) {
 }
 
 function updateKeys(e) {
-  if (isKeyValid(e.key)) {
+  if (isKeyValid(e.keyCode)) {
     // TODO: refactor shit code
-    if (e.key === "q") {
-      if (!e.repeat) e.type === "keydown" ? show(BOARD_TEXT) : hide(BOARD_TEXT);
-    } else if (e.key === "h") {
-      if (!e.repeat) e.type === "keydown" ? show(HELP_TEXT) : hide(HELP_TEXT);
-    } else {
-      if (e.type === "keyup") {
-        pressed.delete(e.key);
-      } else {
-        pressed.add(e.key);
-        socket.emit("keypress", [...pressed], () => { });
-      }
+    switch (e.keyCode) {
+      case 81: // q
+        if (!e.repeat) e.type === "keydown" ? show(BOARD_TEXT) : hide(BOARD_TEXT);
+        break;
+
+      case 72: // h
+        if (!e.repeat) e.type === "keydown" ? show(HELP_TEXT) : hide(HELP_TEXT);
+        break;
+
+      default:
+        if (e.type === "keyup") {
+          pressed.delete(e.key);
+        } else {
+          pressed.add(e.key);
+          socket.emit("keypress", [...pressed], () => { });
+        }
+        break;
     }
   }
 }

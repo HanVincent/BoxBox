@@ -30,11 +30,11 @@ r: rank
 攻擊到假箱子會發生爆炸，產生損傷: 60
                 </pre>
             </div>
-            <div class="modal-footer">
+            <form class="modal-footer" onsubmit="startRender(event)">
                 Name:
-                <input type="text" id="name" name="name">
-                <button onclick="startRender()" class="start">Start</button>
-            </div>
+                <input type="text" id="name" name="name" autofocus>
+                <button type="submit" onclick="startRender(event)" class="start">Start</button>
+            </form>
         </div>
     </div>
 

@@ -2,7 +2,9 @@ let lawn, sea, character; // Sprite entity
 let sprites = { knife: null, bullet: null, blood: null };
 let boxes = {};
 
-function startRender() {
+function startRender(event) {
+  event.preventDefault();
+  
   document.body.appendChild(renderer.view);
   loader
     .add("ground", "images/ground.json")
@@ -45,8 +47,8 @@ function setAbility() {
   sprites.bullet.x = BOX.size / 2
   sprites.bullet.y = BOX.size / 2
   sprites.bullet.anchor.set(0.5);
-  sprites.blood.x = BOX.size +5;
-  stage.addChild(sprites.knife,sprites.bullet,sprites.blood);
+  sprites.blood.x = BOX.size + 5;
+  stage.addChild(sprites.knife, sprites.bullet, sprites.blood);
 }
 
 function updateAbility(player) {
