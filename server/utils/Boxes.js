@@ -11,7 +11,7 @@ class Boxes {
     while (isAnyCollided(x, y, this.getBoxes())) {
       [x, y] = genLoc();
     }
-
+    // TODO: random radian
     const box = {
       id, name, x, y, radian: 0,
 
