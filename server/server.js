@@ -50,29 +50,12 @@ io.on('connection', (socket) => {
     socket.on('keypress', (pressed, callback) => {
         if (boxes.getBox(socket.id).isDead) return;
 
-        pressed.forEach((each) => {
-            switch (each) {
-                case 'w':
-                    boxes.move(socket.id, -1);
-                    break;
-                case 's':
-                    boxes.move(socket.id, 1);
-                    break;
-                case 'd':
-                    boxes.rotate(socket.id, 1);
-                    break;
-                case 'a':
-                    boxes.rotate(socket.id, -1);
-                    break;
-                case 'j':
-                    boxes.change(socket.id);
-                    break;
-                case 'k':
-                    attacks.addAttack(boxes.getBox(socket.id));
-                    attacks.checkAttacks(boxes.getLiveBoxes());
-                    break;
-            }
-        })
+        if (pressed.forward) boxes.move(socket.id, -1);
+        if (pressed.backward) boxes.move(socket.id, 1);
+        if (pressed.right) boxes.rotate(socket.id, 1);
+        if (pressed.left) boxes.rotate(socket.id, -1);
+        if (pressed.change) boxes.change(socket.id);
+        if (pressed.attack) attacks.addAttack(boxes.getBox(socket.id));
 
         broadcast();
     });

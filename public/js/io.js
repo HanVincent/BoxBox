@@ -1,33 +1,36 @@
-const VALID_KEYS = [87, 83, 65, 68, 74, 75, 72, 81];
-const pressed = new Set();
-
-function isKeyValid(key) {
-  return VALID_KEYS.includes(key);
-}
+const pressed = { forward: false, backward: false, right: false, left: false, change: false, attack: false }
 
 function updateKeys(e) {
-  if (isKeyValid(e.keyCode)) {
-    // TODO: refactor shit code
-    switch (e.keyCode) {
-      case 81: // q
-        if (!e.repeat) e.type === "keydown" ? show(BOARD_TEXT) : hide(BOARD_TEXT);
-        break;
-
-      case 72: // h
-        if (!e.repeat) e.type === "keydown" ? show(HELP_TEXT) : hide(HELP_TEXT);
-        break;
-
-      default:
-        if (e.type === "keyup") {
-          pressed.delete(e.key);
-        } else {
-          pressed.add(e.key);
-          socket.emit("keypress", [...pressed], () => { });
-        }
-        break;
-    }
+  const isPressed = e.type === "keydown";
+  switch (e.keyCode) {
+    case 81: // q
+      if (!e.repeat) isPressed ? show(BOARD_TEXT) : hide(BOARD_TEXT);
+      break;
+    case 72: // h
+      if (!e.repeat) isPressed ? show(HELP_TEXT) : hide(HELP_TEXT);
+      break;
+    case 87: // w
+      pressed.forward = isPressed;
+      break;
+    case 83: // s
+      pressed.backward = isPressed;
+      break;
+    case 65: // a
+      pressed.left = isPressed;
+      break;
+    case 68: // d 
+      pressed.right = isPressed;
+      break;
+    case 75: // k
+      pressed.attack = isPressed;
+      break;
+    case 74: // j
+      pressed.change = isPressed;
+      break;
   }
+  socket.emit("keypress", pressed);
 }
+
 
 let socket = null;
 function setupSocket(name) {

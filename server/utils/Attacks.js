@@ -87,6 +87,7 @@ class Attacks {
                     box.id !== bullet.attacker.id &&
                     isCollided(bullet.x, bullet.y, box.x, box.y)) {
                     bullet.updateTime = 20; // TODO: fix
+                    bullet.isGone = true;
                     this.attacked(bullet.attacker, box, ATTACK.atkBullet)
                 }
             }
