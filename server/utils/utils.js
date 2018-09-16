@@ -14,7 +14,7 @@ function isAnyCollided(x, y, boxes) {
   return checkAll.some(k => k);
 }
 
-function isCollided(x1, y1, x2, y2) {
+function isCollided(x1, y1, x2, y2) { // circle
   if (Math.abs(x1 - x2) > BOX.size || Math.abs(y1 - y2) > BOX.size)
     return false;
   if (Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) < Math.pow(BOX.size, 2))
@@ -22,7 +22,7 @@ function isCollided(x1, y1, x2, y2) {
   return false;
 }
 
-function isBombed(x1, y1, x2, y2) {
+function isBombed(x1, y1, x2, y2) { // circle
   if (Math.abs(x1 - x2) > 2 * BOX.size || Math.abs(y1 - y2) > 2 * BOX.size)
     return false;
   if (Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) < Math.pow(2 * BOX.size, 2))

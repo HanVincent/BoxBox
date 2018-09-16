@@ -17,7 +17,7 @@ function updateKeys(e) {
         pressed.delete(e.key);
       } else {
         pressed.add(e.key);
-        socket.emit("keypress", [...pressed], () => {});
+        socket.emit("keypress", [...pressed], () => { });
       }
     }
   }
@@ -28,14 +28,22 @@ function setupSocket(name) {
   socket = io("", { query: `name=${name}` });
 
   socket.on("connect", () => {
-    console.log("Connected to server. EventListener is on");
-
     document.addEventListener("keydown", updateKeys);
     document.addEventListener("keyup", updateKeys);
   });
 
-  socket.on("boxes", data => {
-    players = data;
+  socket.on("init", data => {
+    console.log(data);
+  });
+
+  socket.on("boxes", players => {
+    players.forEach(player => {
+      (!boxes[player.id]) ? changeSprite(player, "box") : moveSprite(player);
+
+      if (player.id === socket.id) {
+        updateAbility(player);
+      }
+    })
   });
 
   socket.on("board", data => {
@@ -43,15 +51,17 @@ function setupSocket(name) {
   });
 
   socket.on("attacks", attacks => {
-    const [knives, bombs] = attacks;
+    const [knives, bullets, bombs] = attacks;
 
-    for (let knife of knives) {
-      knifeAttack(knife.x, knife.y);
-    }
-    for (let bomb of bombs) {
-      bombAttack(bomb.x, bomb.y);
-    }
+    knives.forEach(knife => { knifeAttack(knife.x, knife.y); });
+    bullets.forEach(bullet => { bullet.isGone ? removeSprite(bullet.id) : changeSprite(bullet, "bullet"); });
+    bombs.forEach(bomb => { bombAttack(bomb.x, bomb.y); });
   });
+
+  socket.on("deadAndReborn", ({ dead: deadBoxes = [], reborn: rebornBoxes = [] }) => {
+    deadBoxes.forEach(box => { changeSprite(box, "blood"); });
+    rebornBoxes.forEach(box => { changeSprite(box, "box"); });
+  })
 
   socket.on("remove", id => {
     removeSprite(id);

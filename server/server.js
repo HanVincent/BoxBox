@@ -15,35 +15,40 @@ const io = socketIO(server);
 
 app.use(express.static(publicPath));
 
-// temp all boxes
 const boxes = new Boxes();
 const attacks = new Attacks();
 
 // Create computer boxes
-const NUM = 10;
-for(let comID = 0; comID < NUM; comID++){
+const FAKE_NUM = 10;
+for (let comID = 0; comID < FAKE_NUM; comID++) {
     boxes.addBox(comID, "", true);
 }
 
-function gameUpdate() {
+function broadcast() {
+    attacks.updateBullets();
+    attacks.checkAttacks(boxes.getLiveBoxes());
+
     io.emit('boxes', boxes.getBoxes());
     io.emit('attacks', attacks.getAttacks());
     io.emit('board', attacks.getBoard());
+    io.emit('deadAndReborn', { dead: boxes.getDeadBoxes(), reborn: boxes.checkReborn() })
+
+    // TODO: not good
+    attacks.updateAttacks(); // if io.emit is not sync, then why it works?
 }
+
+setInterval(broadcast, 1000 / 20);
 
 io.on('connection', (socket) => {
     console.log("New user connected: " + socket.id);
-    
-    const name = socket.handshake.query.name
-    const box = boxes.addBox(socket.id, name);
-    attacks.updateBoard(box);
-    gameUpdate();
+    socket.emit('init', 'test');
 
-    // console.log(boxes.getBoxes());
+    const box = boxes.addBox(socket.id, socket.handshake.query.name);
+    attacks.addBoxToBoard(box);
+    broadcast();
+
     socket.on('keypress', (pressed, callback) => {
-        // console.log(pressed);
-
-        if (!boxes.getBox(socket.id)) return;
+        if (boxes.getBox(socket.id).isDead) return;
 
         pressed.forEach((each) => {
             switch (each) {
@@ -59,25 +64,28 @@ io.on('connection', (socket) => {
                 case 'a':
                     boxes.rotate(socket.id, -1);
                     break;
+                case 'j':
+                    boxes.change(socket.id);
+                    break;
                 case 'k':
                     attacks.addAttack(boxes.getBox(socket.id));
-                    attacks.checkAttacks(boxes.getBoxes());
+                    attacks.checkAttacks(boxes.getLiveBoxes());
                     break;
             }
         })
 
-        gameUpdate();
-        boxes.checkAnyDead(gameUpdate);
-        attacks.updateAttacks();
+        broadcast();
     });
 
     socket.on('disconnect', () => {
         console.log('User disconnected: ' + socket.id);
 
         boxes.removeBox(socket.id);
-        attacks.removeBoard(socket.id);
+        attacks.removeBullet(socket.id);
+        attacks.removeBoxFromBoard(socket.id);
+
         io.emit('remove', socket.id); // TODO: workaround for disconnecting user
-        io.emit('boxes', boxes.getBoxes());
+        broadcast();
     });
 });
 

@@ -21,7 +21,9 @@ class Boxes {
 
       isFake,
       isDead: false,
-      isWaiting: false
+      deathTime: 0,
+      attackTime: 0,
+      weaponTime: 0,
     }
     this.boxes[id] = box;
     return box;
@@ -36,9 +38,20 @@ class Boxes {
     return Object.values(this.boxes).filter(box => box.id !== id);
   }
   getBoxes() {
-    // room
     return Object.values(this.boxes);
-    // const boxes = this.boxes.filter(box => box.room === room);
+  }
+  getLiveBoxes(exceptID = "") {
+    return this.getBoxes().filter(box => !box.isDead && box.id !== exceptID);
+  }
+  getDeadBoxes(exceptID = "") {
+    return this.getBoxes().filter(box => box.isDead && box.id !== exceptID);
+  }
+
+  checkReborn() {
+    return this.getDeadBoxes().filter(box => Date.now() - box.deathTime >= BOX.bufReborn).map(box => {
+      this.removeBox(box.id);
+      return this.addBox(box.id, box.name, box.isFake);
+    })
   }
 
   move(id, direction) {
@@ -53,7 +66,7 @@ class Boxes {
     box.y = Math.max(BOX.size / 2, Math.min(MAP.maxHeight - BOX.size / 2, box.y));
 
     // if collide others, restore origin location
-    if (isAnyCollided(box.x, box.y, this.getOtherBoxes(id))) {
+    if (isAnyCollided(box.x, box.y, this.getLiveBoxes(id))) {
       box.x += direction * Math.sin(box.radian) * BOX.vx;
       box.y -= direction * Math.cos(box.radian) * BOX.vy;
     }
@@ -62,24 +75,11 @@ class Boxes {
   rotate(id, direction) {
     const box = this.getBox(id);
     box.radian += direction * BOX.vrot; // only step 1
-
   }
 
-  // check if any dead box and reborn
-  checkAnyDead(callback) {
-    const self = this;
-    for (let box of this.getBoxes()) {
-      if (box.isDead && !box.isWaiting) {
-
-        // reborn
-        this.removeBox(box.id);
-        const pid = setTimeout(() => {
-          self.addBox(box.id, box.name, box.isFake);
-          callback(); // update game
-        }, 5000);
-        box.isWaiting = !!pid;
-      }
-    }
+  change(id) {
+    const box = this.getBox(id);
+    box.attackType = Math.abs(box.attackType - 1);
   }
 }
 

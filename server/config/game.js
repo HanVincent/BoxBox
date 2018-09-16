@@ -10,9 +10,6 @@ const ENTITY = {
 };
 
 const BOX = {
-    screenWidth: 600,
-    screenHeight: 400,
-
     size: 16,
 
     maxBlood: 100,
@@ -21,6 +18,9 @@ const BOX = {
     vx: 10,
     vy: 10,
     vrot: 0.1,
+    
+    bufReborn: 5000,
+    bufWeapon: 1000,
 }
 
 const ATTACK = {
@@ -32,9 +32,7 @@ const ATTACK = {
     atkBullet: 40,
     atkBomb: 60,
 
-    bufKnife: 1,
-    bufBullet: 1,
-    bufChange: 1,
+    bufAttack: 1000,
 }
 
 
