@@ -13,7 +13,6 @@
             <div class="modal-body">
                 <h3>Instruction</h3>
                 <pre>
-(TODO: 改良UI)
 w: forward
 s: backward
 a: rotate left
@@ -25,10 +24,10 @@ k: attack
 q: board
 r: rank
 
-起始血量: 100
-刀子損傷: 60
-攻擊到假箱子會發生爆炸，產生損傷: 60
-每種攻擊都需要冷卻 1 秒
+Initial blood: HP 100
+Knife attack: HP -60
+Explosion of fade box: HP -60
+Attack buffer: 1 sec
                 </pre>
             </div>
             <form class="modal-footer" onsubmit="startRender(event)">

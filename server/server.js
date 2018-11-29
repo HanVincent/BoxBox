@@ -8,7 +8,7 @@ const { Boxes } = require('./utils/Boxes');
 const { Attacks } = require('./utils/Attacks');
 
 const publicPath = path.join(__dirname, '../public'); // get static file loc
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
