@@ -1,61 +1,46 @@
-const { ATTACK, BOX } = require("../config/game");
-const { isCollided, isBombed } = require("./utils");
+const ScoreBoardComponent = require("./ScoreBoardComponent");
+const KnifeAttackModel = require("../models/KnifeAttackModel");
+const BulletAttackModel = require("../models/BulletAttackModel");
+const BombAttackModel = require("../models/BombAttackModel");
 
-class Attacks {
+const {ATTACK} = require("../config/game");
+const {isCollided, isBombed} = require("../lib/utils");
+
+class AttackComponent {
+
     constructor() {
         this.knives = [];
         this.bombs = [];
         this.bullets = [];
-        this.board = {}; // don't know why use {}
-        this.bulletID = 0;
+
+        setInterval(this.updateBullets.bind(this), 60);
     }
 
-    addBoxToBoard(box) {
-        this.board[box.id] = {
-            id: box.id,
-            name: box.name,
-            kill: 0,
-            dead: 0,
-        }
-    }
-    removeBoxFromBoard(id) {
-        delete this.board[id]
-    }
     addAttack(box) {
         if (Date.now() - box.attackTime <= ATTACK.bufAttack) return;
         else box.attackTime = Date.now();
 
-        const radian = box.radian;
-        const sin = Math.sin(radian);
-        const cos = Math.cos(radian);
-        const x = box.x + sin * BOX.size; // start x
-        const y = box.y - cos * BOX.size; // start y
-
         switch (box.attackType) {
             case ATTACK.KNIFE:
-                this.knives.push({ attacker: box, x, y });
+                this.knives.push(new KnifeAttackModel(box));
                 break;
 
             case ATTACK.BULLET:
+                // TODO: decrease
                 if (box.bulletNum <= 0) break;
 
-                this.bullets.push({
-                    attacker: box,
-                    id: "bullet_" + this.bulletID,
-                    x, y, radian,
-                    dx: sin * 10, dy: cos * 10, updateTime: 0
-                });
-                this.bulletID++;
+                this.bullets.push(new BulletAttackModel(box));
                 break;
 
             case ATTACK.BOMB:
-                this.bombs.push({ x: box.x, y: box.y });
+                this.bombs.push(new BombAttackModel(box));
                 break;
 
             default:
                 break;
         }
     }
+
     updateBullets() {
         this.bullets.forEach(bullet => {
             bullet.x += bullet.dx;
@@ -66,13 +51,16 @@ class Attacks {
         // TODO: workaround
         this.bullets = this.bullets.filter(bullet => bullet.updateTime < 30);
     }
+
     removeBullet(id) {
         this.bullets = this.bullets.filter(bullet => bullet.attacker.id !== id);
     }
-    updateAttacks() {
+
+    clearAttacks() {
         this.knives = [];
         this.bombs = [];
     }
+
     checkAttacks(boxes) {
         // TODO: refactor
         for (let box of boxes) {
@@ -98,6 +86,8 @@ class Attacks {
 
         this.checkBombs(boxes);
     }
+
+    // TODO: refactor
     checkBombs(boxes) {
         for (let bomb of this.bombs) {
             for (let box of boxes) {
@@ -110,24 +100,29 @@ class Attacks {
             }
         }
     }
+
+    // TODO: refactor
     // only here will decrease blood
     attacked(attacker, attacked, hurt) {
         attacked.blood = Math.max(attacked.blood - hurt, 0);
         if (attacked.isDead = attacked.blood <= 0) {
             attacked.deathTime = Date.now();
             if (!attacked.isFake) {
-                this.board[attacked.id].dead += 1; // real box died
+                ScoreBoardComponent.incrementDead(attacked.id); // real box died
                 if (attacker && !attacker.isFake)
-                    this.board[attacker.id].kill += 1; // kill right box
+                    ScoreBoardComponent.incrementKill(attacker.id); // kill right box
             }
         }
     }
+
     getAttacks() {
-        return [this.knives, this.bullets, this.bombs];
+        return {
+            knives: this.knives,
+            bullets: this.bullets,
+            bombs: this.bombs
+        };
     }
-    getBoard() {
-        return Object.values(this.board);
-    }
+
 }
 
-module.exports = { Attacks };
+module.exports = new AttackComponent();

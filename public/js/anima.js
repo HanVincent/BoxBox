@@ -1,49 +1,46 @@
-let bombing = [], knifing = [];
+class Anima {
+    constructor(stage) {
+        this.stage = stage;
+        this.bombing = [];
+        this.knifing = [];
 
-// init
-function setBombAnima() {
-    for (let i = 0; i < 4; i++) {
-        bombing.push(PIXI.Texture.fromFrame('bomb_' + i));
-    }
-}
-
-function setKnifeAnima() {
-    for (let i = 0; i < 8; i++) {
-        knifing.push(PIXI.Texture.fromFrame('knife_' + i));
-    }
-}
-
-// utils
-function bombAttack(x, y) {
-    const surroundings = [[x - BOX.size, y - BOX.size], [x - BOX.size, y],
-    [x - BOX.size, y + BOX.size], [x, y - BOX.size], [x, y + BOX.size],
-    [x + BOX.size, y - BOX.size], [x + BOX.size, y], [x + BOX.size, y + BOX.size]];
-
-    for (let [sx, sy] of surroundings) {
-        const bomb = new PIXI.extras.AnimatedSprite(bombing);
-        bomb.anchor.set(0.5);
-        bomb.animationSpeed = 0.1;
-        bomb.loop = false;
-        bomb.onComplete = () => {
-            stage.removeChild(bomb);
+        // loading animation frames
+        for (let i = 0; i < 4; i++) {
+            this.bombing.push(new PIXI.Texture.fromFrame('bomb_' + i));
         }
-        bomb.x = sx;
-        bomb.y = sy;
-        bomb.gotoAndPlay(0);
-        stage.addChild(bomb);
+        for (let i = 0; i < 8; i++) {
+            this.knifing.push(PIXI.Texture.fromFrame('knife_' + i));
+        }
     }
-}
 
-function knifeAttack(x, y) {
-    const knife = new PIXI.extras.AnimatedSprite(knifing);
-    knife.anchor.set(0.5);
-    knife.animationSpeed = 0.3;
-    knife.loop = false;
-    knife.onComplete = () => {
-        stage.removeChild(knife);
+    bombAttack(x, y) {
+        const surroundings = [[x - window.GAME.ENTITY.size, y - window.GAME.ENTITY.size], [x - window.GAME.ENTITY.size, y],
+            [x - window.GAME.ENTITY.size, y + window.GAME.ENTITY.size], [x, y - window.GAME.ENTITY.size], [x, y + window.GAME.ENTITY.size],
+            [x + window.GAME.ENTITY.size, y - window.GAME.ENTITY.size], [x + window.GAME.ENTITY.size, y], [x + window.GAME.ENTITY.size, y + window.GAME.ENTITY.size]];
+
+        for (let [sx, sy] of surroundings) {
+            const bomb = new PIXI.extras.AnimatedSprite(this.bombing);
+            bomb.anchor.set(0.5);
+            bomb.animationSpeed = 0.1;
+            this.runAnimation(bomb, sx, sy);
+        }
     }
-    knife.x = x;
-    knife.y = y;
-    knife.gotoAndPlay(0);
-    stage.addChild(knife);
+
+    knifeAttack(x, y) {
+        const knife = new PIXI.extras.AnimatedSprite(this.knifing);
+        knife.anchor.set(0.5);
+        knife.animationSpeed = 0.3;
+        this.runAnimation(knife, x, y);
+    }
+
+    runAnimation(obj, x, y) {
+        obj.loop = false;
+        obj.onComplete = () => {
+            this.stage.removeChild(obj);
+        }
+        obj.x = x;
+        obj.y = y;
+        obj.gotoAndPlay(0);
+        this.stage.addChild(obj);
+    }
 }

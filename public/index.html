@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>bOx bOx</title>
+    <title>BoxBox</title>
     <meta charset='utf8'>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 </head>
@@ -30,11 +30,11 @@ Explosion of fade box: HP -60
 Attack buffer: 1 sec
                 </pre>
             </div>
-            <form class="modal-footer" onsubmit="startRender(event)">
+            <div class="modal-footer">
                 Name:
                 <input type="text" id="name" name="name" autofocus>
-                <button type="submit" onclick="startRender(event)" class="start">Start</button>
-            </form>
+                <button type="submit" onclick="startGame(event)" class="start">Start</button>
+            </div>
         </div>
     </div>
 
@@ -42,10 +42,11 @@ Attack buffer: 1 sec
     <link rel="stylesheet" href="index.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.7.0/pixi.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/init.js"></script>
+
+    <script src="/js/controller.js"></script>
+    <script src="/js/model.js"></script>
+    <script src="/js/view.js"></script>
     <script src="/js/anima.js"></script>
-    <script src="/js/render.js"></script>
-    <script src="/js/io.js"></script>
 </body>
 
 </html>
